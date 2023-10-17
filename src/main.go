@@ -14,14 +14,14 @@ func main() {
 
 func handlerUpload(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		fmt.Println("Operation not permited. Use POST")
+		fmt.Fprintf(w, "Operation not permited. Use POST")
 		return
 	}
 
 	file, headers, err := r.FormFile("file")
 
 	if err != nil {
-		fmt.Println("Something went wrong while getting file")
+		fmt.Fprintf(w, "Something went wrong while getting file")
 		return
 	}
 
@@ -32,11 +32,11 @@ func handlerUpload(w http.ResponseWriter, r *http.Request) {
 	dst, err := os.Create(path)
 
 	if err != nil {
-		fmt.Printf("Something went wrong while creating file: $v\n", err)
+		fmt.Fprintf(w, "Something went wrong while creating file: $v")
 		return
 	}
 
 	io.Copy(dst, file)
 
-	fmt.Println("Api Upload Response")
+	fmt.Fprintf(w, "upload ok: $q", path)
 }
