@@ -5,18 +5,19 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"messages"
 )
 
 func Upload(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		fmt.Fprintf(w, "Operation not permited. Use POST")
+		fmt.Fprintf(w, messages.NOT_PERMITED)
 		return
 	}
 
 	file, headers, err := r.FormFile("file")
 
 	if err != nil {
-		fmt.Fprintf(w, "Something went wrong while getting file")
+		fmt.Fprintf(w, messages.ERR_GET_FILE)
 		return
 	}
 
@@ -27,11 +28,11 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	dst, err := os.Create(path)
 
 	if err != nil {
-		fmt.Fprintf(w, "Something went wrong while creating file: $v")
+		fmt.Fprintf(w, messages.ERR_CREATE_FILE)
 		return
 	}
 
 	io.Copy(dst, file)
 
-	fmt.Fprintf(w, "upload ok: $q", path)
+	fmt.Fprintf(w, messages.UPLOAD_OK_RESPONSE, path)
 }
