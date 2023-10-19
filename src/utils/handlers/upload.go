@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"messages"
+	"strings"
 )
 
 func Upload(w http.ResponseWriter, r *http.Request) {
@@ -24,6 +25,13 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	filename := headers.Filename
+
+	if inputName := r.FormValue("name"); inputName != "" {
+		filenameParts := strings.Split(filename, ".")
+		extension := filenameParts[len(filenameParts) - 1]
+		filename = inputName + "." + extension
+	}
+
 	path := "../storage/" + filename
 	dst, err := os.Create(path)
 
