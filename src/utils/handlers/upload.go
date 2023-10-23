@@ -7,6 +7,7 @@ import (
 	"os"
 	"messages"
 	"strings"
+	"validators"
 )
 
 func Upload(w http.ResponseWriter, r *http.Request) {
@@ -25,10 +26,16 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	filename := headers.Filename
+	lastIndex := strings.LastIndex(filename, ".")
+	extension := filename[lastIndex+1:]
+
+	if ! validators.IsExtensionOk(extension) {
+		fmt.Fprintf(w, messages.EXT_NOT_ALLOWED)
+		return;
+	}
 
 	if inputName := r.FormValue("name"); inputName != "" {
-		lastIndex := strings.LastIndex(filename, ".")
-		filename = inputName + "." + filename[lastIndex+1:]
+		filename = inputName + "." + extension
 	}
 
 	path := "../storage/" + filename

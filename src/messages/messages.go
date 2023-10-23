@@ -5,4 +5,5 @@ const (
 	ERR_GET_FILE = "Something went wrong while getting file"
 	ERR_CREATE_FILE = "Something went wrong while creating file"
 	UPLOAD_OK_RESPONSE = "upload ok: %q"
+	EXT_NOT_ALLOWED = "extension not allowed"
 )
