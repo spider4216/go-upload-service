@@ -25,7 +25,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 
 	defer file.Close()
 
-	filename := headers.Filename
+	filename := strings.ToLower(headers.Filename)
 	lastIndex := strings.LastIndex(filename, ".")
 	extension := filename[lastIndex+1:]
 
@@ -35,7 +35,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if inputName := r.FormValue("name"); inputName != "" {
-		filename = inputName + "." + extension
+		filename = strings.ToLower(inputName) + "." + extension
 	}
 
 	path := "../storage/" + filename
