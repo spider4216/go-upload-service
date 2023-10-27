@@ -17,7 +17,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	request.Method = r.Method
 	request.Name = r.FormValue("name")
 
-	if r.Method != "POST" {
+	if request.Method != "POST" {
 		fmt.Fprintf(w, messages.NOT_PERMITED)
 		return
 	}
