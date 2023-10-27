@@ -8,21 +8,20 @@ import (
 	"messages"
 	"strings"
 	"validators"
-	"structures"
+	"fabrics"
+)
+
+const (
+	HTTP_POST_METHOD = "POST"
 )
 
 func Upload(w http.ResponseWriter, r *http.Request) {
-	var request structures.UploadRequest
+	request := fabrics.BuildUploadRequest(r)
 
-	request.Method = r.Method
-	request.Name = r.FormValue("name")
-
-	if request.Method != "POST" {
+	if request.Method != HTTP_POST_METHOD {
 		fmt.Fprintf(w, messages.NOT_PERMITED)
 		return
 	}
-
-	request.File, request.Headers, request.Err = r.FormFile("file")
 
 	if request.Err != nil {
 		fmt.Fprintf(w, messages.ERR_GET_FILE)
