@@ -8,24 +8,30 @@ import (
 	"messages"
 	"strings"
 	"validators"
+	"structures"
 )
 
 func Upload(w http.ResponseWriter, r *http.Request) {
+	var request structures.UploadRequest
+
+	request.Method = r.Method
+	request.Name = r.FormValue("name")
+
 	if r.Method != "POST" {
 		fmt.Fprintf(w, messages.NOT_PERMITED)
 		return
 	}
 
-	file, headers, err := r.FormFile("file")
+	request.File, request.Headers, request.Err = r.FormFile("file")
 
-	if err != nil {
+	if request.Err != nil {
 		fmt.Fprintf(w, messages.ERR_GET_FILE)
 		return
 	}
+	
+	defer request.File.Close()
 
-	defer file.Close()
-
-	filename := strings.ToLower(headers.Filename)
+	filename := strings.ToLower(request.Headers.Filename)
 	lastIndex := strings.LastIndex(filename, ".")
 	extension := filename[lastIndex+1:]
 
@@ -34,8 +40,8 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		return;
 	}
 
-	if inputName := r.FormValue("name"); inputName != "" {
-		filename = strings.ToLower(inputName) + "." + extension
+	if request.Name != "" {
+		filename = strings.ToLower(request.Name) + "." + extension
 	}
 
 	path := "../storage/" + filename
@@ -46,7 +52,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	io.Copy(dst, file)
+	io.Copy(dst, request.File)
 
 	fmt.Fprintf(w, messages.UPLOAD_OK_RESPONSE, path)
 }
