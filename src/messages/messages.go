@@ -6,4 +6,5 @@ const (
 	ERR_CREATE_FILE = "Something went wrong while creating file"
 	UPLOAD_OK_RESPONSE = "upload ok"
 	EXT_NOT_ALLOWED = "extension not allowed"
+	ERR_WHILE_JSON_ENCODING = "Something went wrong while encoding response data"
 )

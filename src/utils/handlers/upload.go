@@ -9,8 +9,8 @@ import (
 	"strings"
 	"validators"
 	"fabrics"
-	"encoding/json"
-	"structures"
+	"utils/helpers"
+	"constants"
 )
 
 const (
@@ -21,12 +21,12 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	request := fabrics.BuildUploadRequest(r)
 
 	if request.Method != HTTP_POST_METHOD {
-		fmt.Fprintf(w, messages.NOT_PERMITED)
+		fmt.Fprintf(w, helpers.Response(constants.HTTP_UNPROCESSABLE, messages.NOT_PERMITED))
 		return
 	}
 
 	if request.Err != nil {
-		fmt.Fprintf(w, messages.ERR_GET_FILE)
+		fmt.Fprintf(w, helpers.Response(constants.HTTP_UNPROCESSABLE, messages.ERR_GET_FILE))
 		return
 	}
 	
@@ -37,7 +37,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	extension := filename[lastIndex+1:]
 
 	if ! validators.IsExtensionOk(extension) {
-		fmt.Fprintf(w, messages.EXT_NOT_ALLOWED)
+		fmt.Fprintf(w, helpers.Response(constants.HTTP_UNPROCESSABLE, messages.EXT_NOT_ALLOWED))
 		return;
 	}
 
@@ -49,18 +49,13 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	dst, err := os.Create(path)
 
 	if err != nil {
-		fmt.Fprintf(w, messages.ERR_CREATE_FILE)
+		fmt.Fprintf(w, helpers.Response(constants.HTTP_UNPROCESSABLE, messages.ERR_CREATE_FILE))
 		return
 	}
 
 	io.Copy(dst, request.File)
 	
-	response, err := json.Marshal(structures.UploadResponse{Status: 200,Text: messages.UPLOAD_OK_RESPONSE})
-	
-	if err != nil {
-		fmt.Fprintf(w, "something went wrong")
-		return
-	}
+	response := helpers.Response(constants.HTTP_OK, messages.UPLOAD_OK_RESPONSE)
 
 	fmt.Fprintf(w, string(response))
 }
