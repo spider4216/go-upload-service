@@ -9,6 +9,8 @@ import (
 	"strings"
 	"validators"
 	"fabrics"
+	"encoding/json"
+	"structures"
 )
 
 const (
@@ -52,6 +54,13 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	io.Copy(dst, request.File)
+	
+	response, err := json.Marshal(structures.UploadResponse{Status: 200,Text: messages.UPLOAD_OK_RESPONSE})
+	
+	if err != nil {
+		fmt.Fprintf(w, "something went wrong")
+		return
+	}
 
-	fmt.Fprintf(w, messages.UPLOAD_OK_RESPONSE, path)
+	fmt.Fprintf(w, string(response))
 }
