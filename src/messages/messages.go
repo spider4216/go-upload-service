@@ -7,4 +7,5 @@ const (
 	UPLOAD_OK_RESPONSE = "upload ok"
 	EXT_NOT_ALLOWED = "extension not allowed"
 	ERR_WHILE_JSON_ENCODING = "Something went wrong while encoding response data"
+	ERR_READING_DIR = "Something went wrong while reading dir"
 )

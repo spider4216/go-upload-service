@@ -10,3 +10,9 @@ func Response(status int, message string) string {
 	
 	return string(response)
 }
+
+func ResponseArr(status int, data []structures.File) string {
+	response, _ := json.Marshal(data)
+	
+	return string(response)
+}
